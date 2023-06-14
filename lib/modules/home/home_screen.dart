@@ -3,10 +3,8 @@ import 'package:flight/constants/app_colors.dart';
 import 'package:flight/modules/home/search/search_flight_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:formz/formz.dart';
 
-import '../../config/models/Flights.dart';
 import '../../config/models/Flights.dart';
 import '../../constants/app_constant.dart';
 import '../../constants/app_dimen.dart';
@@ -100,7 +98,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               context.read<HomeBloc>().add(HomeDataFetched(
                   adults: state.adults.value,
                   arrival: state.arrival.value,
-                  children: state.children.value,
+                  children: ApiKey.childrenValue,
                   classDegree: ApiKey.classValue,
                   departure: state.departure.value,
                   departureDate: state.departureDate.value,
