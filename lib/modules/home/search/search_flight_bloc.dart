@@ -22,74 +22,79 @@ class SearchFlightBloc extends Bloc<SearchFlightEvent, SearchFlightState> {
 
   FutureOr<void> _onAdultChanged(
       AdultChanged event, Emitter<SearchFlightState> emit) {
+    final adult = NormalText.dirty(event.adult);
     emit(state.copyWith(
-        status: event.adult.isEmpty
-            ? FormzStatus.invalid
-            : Formz.validate([
-                state.adults,
-                state.children,
-                state.arrival,
-                state.departure,
-                state.departureDate,
-              ])));
+        adults: adult,
+        status: Formz.validate([
+          adult,
+          state.children,
+          state.arrival,
+          state.departure,
+          state.departureDate,
+        ])));
   }
 
   FutureOr<void> _onChildrenChanged(
       ChildrenChanged event, Emitter<SearchFlightState> emit) {
+    final children = NormalText.dirty(event.children);
     emit(state.copyWith(
-        status: event.children.isEmpty
-            ? FormzStatus.invalid
-            : Formz.validate([
-                state.adults,
-                state.arrival,
-                state.departure,
-                state.departureDate,
-              ])));
+        children: children,
+        status: Formz.validate([
+          state.adults,
+          children,
+          state.arrival,
+          state.departure,
+          state.departureDate,
+        ])));
   }
 
   FutureOr<void> _onDepartureChanged(
       DepartureChanged event, Emitter<SearchFlightState> emit) {
+    final departure = NormalText.dirty(event.departure);
     emit(state.copyWith(
-        status: event.departure.isEmpty
-            ? FormzStatus.invalid
-            : Formz.validate([
-                state.adults,
-                state.arrival,
-                state.children,
-                state.departureDate,
-              ])));
+        departure: departure,
+        status: Formz.validate([
+          state.adults,
+          state.children,
+          state.arrival,
+          departure,
+          state.departureDate,
+        ])));
   }
 
   FutureOr<void> _onArrivalChanged(
       ArrivalChanged event, Emitter<SearchFlightState> emit) {
+    final arrival = NormalText.dirty(event.arrival);
     emit(state.copyWith(
-        status: event.arrival.isEmpty
-            ? FormzStatus.invalid
-            : Formz.validate([
-                state.adults,
-                state.children,
-                state.departure,
-                state.departureDate,
-              ])));
+        arrival: arrival,
+        status: Formz.validate([
+          state.adults,
+          state.children,
+          arrival,
+          state.departure,
+          state.departureDate,
+        ])));
   }
 
   FutureOr<void> _onDepartureDateChanged(
       DepartureDateChanged event, Emitter<SearchFlightState> emit) {
+    final departureDate = NormalText.dirty(event.departureDate);
     emit(state.copyWith(
-        status: event.departureDate.isEmpty
-            ? FormzStatus.invalid
-            : Formz.validate([
-                state.adults,
-                state.children,
-                state.arrival,
-                state.departure,
-              ])));
+        departureDate: departureDate,
+        status: Formz.validate([
+          state.adults,
+          state.children,
+          state.arrival,
+          state.departure,
+          departureDate,
+        ])));
   }
 
   FutureOr<void> _onSearchSubmitted(
       SearchSubmitted event, Emitter<SearchFlightState> emit) async {
     print('status = $state.status');
     if (state.status.isValidated) {
+      emit(state.copyWith(status: FormzStatus.submissionInProgress));
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     }
   }
