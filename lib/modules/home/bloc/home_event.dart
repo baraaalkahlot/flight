@@ -7,6 +7,15 @@ abstract class HomeEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class SortItemChanged extends HomeEvent {
+  final SortOption sortOption;
+
+  const SortItemChanged.name(this.sortOption);
+
+  @override
+  List<Object> get props => [sortOption];
+}
+
 class HomeDataFetched extends HomeEvent {
   final String adults;
   final String arrival;

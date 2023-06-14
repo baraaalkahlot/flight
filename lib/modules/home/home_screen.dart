@@ -69,6 +69,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final _departureDateTextController = TextEditingController();
   bool showFilter = false;
   late AnimationController _lottieAnimationController;
+  SortOption currentValue = SortOption.main;
 
   @override
   void initState() {
@@ -89,7 +90,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             if (state.status == RequestStatus.failure) {
               AppDialog.showAppAlertDialog(
                   context: context, content: state.message);
-            }else if(state.status == RequestStatus.success){
+            } else if (state.status == RequestStatus.success) {
               setState(() {
                 showFilter = false;
               });
@@ -120,6 +121,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildFlightTitle(),
+              const SizedBox(height: AppDimen.spacingNormal),
+              _buildSortDropdown(),
               const SizedBox(height: AppDimen.spacingNormal),
               Visibility(visible: showFilter, child: _buildFilterLayout()),
               const SizedBox(height: AppDimen.spacingNormal),
@@ -368,9 +371,35 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildSortDropdown() {
+    return DropdownButtonFormField(
+      decoration: WidgetStyleExtension.filledInputDecoration,
+      value: currentValue,
+      isExpanded: true,
+      items: SortOption.values.map((SortOption option) {
+        return DropdownMenuItem<SortOption>(
+          value: option,
+          child: FittedBox(
+            fit: BoxFit.contain,
+            child: Row(
+              children: [
+                Text(option.name),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+      onChanged: (SortOption? value) {
+        currentValue = value!;
+      },
+    );
+  }
+
   @override
   void dispose() {
     super.dispose();
     _lottieAnimationController.dispose();
   }
 }
+
+enum SortOption { price, arrival, departure, main }
