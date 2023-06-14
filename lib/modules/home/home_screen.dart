@@ -70,6 +70,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool showFilter = false;
   late AnimationController _lottieAnimationController;
   SortOption currentValue = SortOption.main;
+  List<Flights> _originalFlights = []; // Store the original list order
 
   @override
   void initState() {
@@ -166,6 +167,34 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         List<Flights> flights = state.flightDto.response?.flights ?? [];
+
+        // Store the original list order if it hasn't been stored yet
+        if (_originalFlights.isEmpty) {
+          _originalFlights = List.from(flights);
+        }
+
+        // Sort the flights based on the current sort option
+        switch (currentValue) {
+          case SortOption.price:
+            flights.sort((a, b) => (a.price?.grandTotal?.round() ?? 0)
+                .compareTo(b.price?.grandTotal?.round() ?? 0));
+            break;
+          case SortOption.arrival:
+            flights.sort((a, b) =>
+                (a.routes?.first.segments?.first.arrivalCity ?? '').compareTo(
+                    b.routes?.first.segments?.first.arrivalCity ?? ''));
+            break;
+          case SortOption.departure:
+            flights.sort((a, b) =>
+                (a.routes?.first.segments?.first.departureCity ?? '').compareTo(
+                    b.routes?.first.segments?.first.departureCity ?? ''));
+            break;
+          case SortOption.main:
+            flights =
+                List.from(_originalFlights); // Restore the original list order
+            break;
+        }
+
         return Expanded(
           child: ListView.builder(
               scrollDirection: Axis.vertical,
@@ -390,7 +419,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         );
       }).toList(),
       onChanged: (SortOption? value) {
-        currentValue = value!;
+        setState(() {
+          currentValue = value!;
+        });
       },
     );
   }
