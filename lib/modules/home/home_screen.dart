@@ -89,6 +89,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             if (state.status == RequestStatus.failure) {
               AppDialog.showAppAlertDialog(
                   context: context, content: state.message);
+            }else if(state.status == RequestStatus.success){
+              setState(() {
+                showFilter = false;
+              });
             }
           },
         ),
