@@ -180,14 +180,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 .compareTo(b.price?.grandTotal?.round() ?? 0));
             break;
           case SortOption.arrival:
-            flights.sort((a, b) =>
-                (a.routes?.first.segments?.first.arrivalCity ?? '').compareTo(
-                    b.routes?.first.segments?.first.arrivalCity ?? ''));
-            break;
-          case SortOption.departure:
-            flights.sort((a, b) =>
-                (a.routes?.first.segments?.first.departureCity ?? '').compareTo(
-                    b.routes?.first.segments?.first.departureCity ?? ''));
+            flights.sort((a, b) => (a
+                        .routes?.first.segments?.first.arrivalLocationCode ??
+                    '')
+                .compareTo(
+                    b.routes?.first.segments?.first.arrivalLocationCode ?? ''));
             break;
           case SortOption.main:
             flights =
@@ -433,4 +430,4 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 }
 
-enum SortOption { price, arrival, departure, main }
+enum SortOption { price, arrival, main }
