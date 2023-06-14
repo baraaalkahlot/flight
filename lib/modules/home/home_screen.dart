@@ -41,6 +41,9 @@ class HomeScreen extends StatelessWidget {
         )
       ],
       child: const Scaffold(
+        resizeToAvoidBottomInset: false,
+        // Prevents resizing on keyboard appearance
+
         appBar: PrimaryAppBar(
           title: 'Home',
         ),
