@@ -92,7 +92,6 @@ class SearchFlightBloc extends Bloc<SearchFlightEvent, SearchFlightState> {
 
   FutureOr<void> _onSearchSubmitted(
       SearchSubmitted event, Emitter<SearchFlightState> emit) async {
-    print('status = $state.status');
     if (state.status.isValidated) {
       emit(state.copyWith(status: FormzStatus.submissionInProgress));
       emit(state.copyWith(status: FormzStatus.submissionSuccess));

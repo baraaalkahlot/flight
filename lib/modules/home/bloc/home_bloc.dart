@@ -23,7 +23,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   FutureOr<void> _onHomeDataFetched(
       HomeDataFetched event, Emitter<HomeState> emit) async {
     try {
-      if (state.status == RequestStatus.initial) {
         emit(state.copyWith(status: RequestStatus.inProgress));
         final data = await _homeRepository.getFlights(
           adults: event.adults,
@@ -40,7 +39,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           status: RequestStatus.success,
           flightDto: data,
         ));
-      }
     } catch (errorMsg) {
       print(errorMsg.toString());
       emit(state.copyWith(

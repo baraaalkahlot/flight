@@ -85,13 +85,33 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     // _handleCloudMessagePermission();
-    return BlocListener<HomeBloc, HomeState>(
-      listener: (context, state) {
-        if (state.status == RequestStatus.failure) {
-          AppDialog.showAppAlertDialog(
-              context: context, content: state.message);
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<HomeBloc, HomeState>(
+          listener: (context, state) {
+            if (state.status == RequestStatus.failure) {
+              AppDialog.showAppAlertDialog(
+                  context: context, content: state.message);
+            }
+          },
+        ),
+        BlocListener<SearchFlightBloc, SearchFlightState>(
+          listener: (context, state) {
+            if (state.status.isSubmissionSuccess) {
+              context.read<HomeBloc>().add(HomeDataFetched(
+                  adults: state.adults.value,
+                  arrival: state.arrival.value,
+                  children: state.children.value,
+                  classDegree: ApiKey.classValue,
+                  departure: state.departure.value,
+                  departureDate: state.departureDate.value,
+                  infants: ApiKey.infantsValue,
+                  nonStop: ApiKey.nonStopValue,
+                  lang: ApiKey.langValue));
+            }
+          },
+        ),
+      ],
       child: Stack(
         children: [
           Column(
@@ -241,7 +261,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               decoration: WidgetStyleExtension.outlinedInputDecoration.copyWith(
                   errorText: state.adults.invalid ? 'Invalid Input' : null,
                   hintText: 'Enter Adult count'),
-              keyboardType: TextInputType.name,
+              keyboardType: TextInputType.number,
               controller: _adultTextController,
             );
           },
@@ -265,7 +285,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               decoration: WidgetStyleExtension.outlinedInputDecoration.copyWith(
                   errorText: state.children.invalid ? 'Invalid Input' : null,
                   hintText: 'Enter Children count'),
-              keyboardType: TextInputType.name,
+              keyboardType: TextInputType.number,
               controller: _childrenTextController,
             );
           },
